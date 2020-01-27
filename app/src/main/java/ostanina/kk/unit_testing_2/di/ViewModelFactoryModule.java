@@ -6,6 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import ostanina.kk.unit_testing_2.ui.note.NoteViewModel;
+import ostanina.kk.unit_testing_2.ui.noteList.NotesListViewModel;
 import ostanina.kk.unit_testing_2.viewmodel.ViewModelProviderFactory;
 
 @Module
@@ -18,4 +19,9 @@ public abstract class ViewModelFactoryModule {
     @IntoMap
     @ViewModelKey(NoteViewModel.class)
     public abstract ViewModel bindNoteViewModel(NoteViewModel noteViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NotesListViewModel.class)
+    public abstract ViewModel bindNoteListViewModel(NotesListViewModel noteListViewModel);
 }

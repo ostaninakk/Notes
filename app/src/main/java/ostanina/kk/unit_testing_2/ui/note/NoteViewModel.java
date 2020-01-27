@@ -8,6 +8,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import io.reactivex.functions.Consumer;
 import ostanina.kk.unit_testing_2.Util.DateUtil;
 import ostanina.kk.unit_testing_2.models.Note;
 import ostanina.kk.unit_testing_2.repository.NoteRepository;
@@ -20,34 +22,49 @@ public class NoteViewModel extends ViewModel {
     private static final String TAG = "NoteViewModel";
     public static final String NO_CONTENT_ERROR = "Can't save note with no content";
 
-    private NoteRepository noteRepository;
-    private MutableLiveData<Note> note = new MutableLiveData<>();
+    public enum ViewState {VIEW, EDIT}
+
+    // inject
+    private final NoteRepository noteRepository;
+
+    // vars
+    private MutableLiveData<Note> note  = new MutableLiveData<>();
     private MutableLiveData<ViewState> viewState = new MutableLiveData<>();
     private boolean isNewNote;
     private Subscription updateSubscription, insertSubscription;
 
-    public enum ViewState {VIEW, EDIT}
 
     @Inject
     public NoteViewModel(NoteRepository noteRepository) {
         this.noteRepository = noteRepository;
     }
 
-    public LiveData<Resource<Integer>> insertNote() throws Exception {
+    public LiveData<Resource<Integer>> insertNote() throws Exception{
         return LiveDataReactiveStreams.fromPublisher(
                 noteRepository.insertNote(note.getValue())
+                        .doOnSubscribe(new Consumer<Subscription>() {
+                            @Override
+                            public void accept(Subscription subscription) throws Exception {
+                                insertSubscription = subscription;
+                            }
+                        })
         );
     }
 
-    public LiveData<Note> observeNote() {
-        return note;
+    public LiveData<Resource<Integer>> updateNote() throws Exception{
+        return LiveDataReactiveStreams.fromPublisher(
+                noteRepository.updateNote(note.getValue())
+                        .doOnSubscribe(new Consumer<Subscription>() {
+                            @Override
+                            public void accept(Subscription subscription) throws Exception {
+                                updateSubscription = subscription;
+                            }
+                        })
+        );
     }
 
-    public void setNote(Note note) throws Exception {
-        if (note.getTitle() == null || note.getTitle().equals("")) {
-            throw new Exception(NOTE_TITLE_NULL);
-        }
-        this.note.setValue(note);
+    public LiveData<Note> observeNote(){
+        return note;
     }
 
     public LiveData<ViewState> observeViewState(){
@@ -63,7 +80,7 @@ public class NoteViewModel extends ViewModel {
     }
 
     public LiveData<Resource<Integer>> saveNote() throws Exception{
-/*
+
         if(!shouldAllowSave()){
             throw new Exception(NO_CONTENT_ERROR);
         }
@@ -105,12 +122,7 @@ public class NoteViewModel extends ViewModel {
                 insertSubscription = null;
             }
         }.getAsLiveData();
-
- */
-return null;
     }
-
-
 
     private void cancelPendingTransactions(){
         if(insertSubscription != null){
@@ -160,6 +172,12 @@ return null;
         return string;
     }
 
+    public void setNote(Note note) throws Exception{
+        if(note.getTitle() == null || note.getTitle().equals("")){
+            throw new Exception(NOTE_TITLE_NULL);
+        }
+        this.note.setValue(note);
+    }
 
     public boolean shouldNavigateBack(){
         if(viewState.getValue() == ViewState.VIEW){

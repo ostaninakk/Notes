@@ -32,6 +32,11 @@ import ostanina.kk.unit_testing_2.ui.Resource;
 import ostanina.kk.unit_testing_2.viewmodel.ViewModelProviderFactory;
 
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerAppCompatActivity;
+
+
 public class NoteActivity extends DaggerAppCompatActivity implements
         View.OnTouchListener,
         GestureDetector.OnGestureListener,
@@ -40,9 +45,7 @@ public class NoteActivity extends DaggerAppCompatActivity implements
         TextWatcher
 
 {
-
     private static final String TAG = "NoteActivity";
-
     // UI components
     private LinedEditText linedEditText;
     private EditText editText;
@@ -79,9 +82,7 @@ public class NoteActivity extends DaggerAppCompatActivity implements
             getIncomingIntent();
             enableEditMode();
         }
-
     }
-
 
     private void getIncomingIntent() {
         try {

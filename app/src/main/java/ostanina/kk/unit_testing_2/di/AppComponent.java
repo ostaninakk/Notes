@@ -1,7 +1,6 @@
 package ostanina.kk.unit_testing_2.di;
 
 import android.app.Application;
-import android.media.AsyncPlayer;
 
 import javax.inject.Singleton;
 
@@ -9,6 +8,7 @@ import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
+import ostanina.kk.unit_testing_2.BaseApplication;
 
 @Singleton
 @Component(modules = {

@@ -1,4 +1,4 @@
-package ostanina.kk.unit_testing_2.ui;
+package ostanina.kk.unit_testing_2.ui.note;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,7 @@ import io.reactivex.internal.operators.single.SingleToFlowable;
 import ostanina.kk.unit_testing_2.Util.InstantExecutorExtension;
 import ostanina.kk.unit_testing_2.models.Note;
 import ostanina.kk.unit_testing_2.repository.NoteRepository;
+import ostanina.kk.unit_testing_2.ui.Resource;
 import ostanina.kk.unit_testing_2.ui.note.NoteViewModel;
 import ostanina.kk.unit_testing_2.util.LiveDataTestUtil1;
 import ostanina.kk.unit_testing_2.util.UtilTest;
